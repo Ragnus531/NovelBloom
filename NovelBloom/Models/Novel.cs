@@ -11,5 +11,5 @@ internal class Novel
     public string Title { get; set; }
     public AppUser User { get; set; }
     public string ShortDescription { get; set; }
-    public NovelDetail NovelDetail { get; set; }
+    public NovelStory NovelStory { get; set; }
 }

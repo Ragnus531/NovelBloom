@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MudBlazor.Services;
+using NovelBloom.Utils;
 
 namespace NovelBloom;
 
@@ -18,6 +19,7 @@ public static class MauiProgram
         builder.Services.AddMauiBlazorWebView();
         builder.Services.AddMudServices();
 
+        builder.Services.AddScoped<StateContainer>();
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();

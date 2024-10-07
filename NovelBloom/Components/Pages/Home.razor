@@ -1,32 +1,40 @@
 ﻿@page "/"
 @using NovelBloom.Models
 @using NovelBloom.Styles
+@using NovelBloom.Utils
 
-
-<MudStack Class="mt-2 ml-3" Row="true">
-    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Genre</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Secondary">Popularity</MudButton>
-</MudStack>
-
-@foreach (var novel in Novels)
+@if (Novels == null)
 {
-    <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; color:{Colors.Gray.Lighten5};")" Class="pa-2 ma-3 rounded-lg">
-        <MudCardHeader>
-            <CardHeaderContent>
-                <MudText Typo="Typo.h5">@novel.Title</MudText>
-                <MudText Typo="Typo.body2">by @novel.User.UserNick</MudText>
-            </CardHeaderContent>
-        </MudCardHeader>
-        <MudCardContent>   
-            <MudText>@novel.ShortDescription</MudText>
-        </MudCardContent>
-        <MudCardActions >
-            <MudStack Row="true" Style="width: 100%;" Justify="Justify.SpaceBetween">
-                <MudFab Color="Color.Tertiary" Style="@($"color:{_themeDefinition.PaletteLight.Black};")" Label="Read More" />
-                <MudFab Color="Color.Secondary" Label="Review" />
-            </MudStack> 
-        </MudCardActions>
-    </MudCard>
+    <p>Loading...</p>
+}
+else
+{
+
+    <MudStack Class="mt-2 ml-3" Row="true">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Genre</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary">Popularity</MudButton>
+    </MudStack>
+
+    @foreach (var novel in Novels)
+    {
+        <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; color:{Colors.Gray.Lighten5};")" Class="pa-2 ma-3 rounded-lg" @onclick="() => GoToNovelDetail(novel)">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5">@novel.Title</MudText>
+                    <MudText Typo="Typo.body2">by @novel.User.UserNick</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>@novel.ShortDescription</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudStack Row="true" Style="width: 100%;" Justify="Justify.SpaceBetween">
+                    <MudFab Color="Color.Tertiary" Style="@($"color:{_themeDefinition.PaletteLight.Black};")" Label="Read More" />
+                    <MudFab Color="Color.Secondary" Label="Review" />
+                </MudStack>
+            </MudCardActions>
+        </MudCard>
+    }
 }
 
 @* <h1>Hello, world!</h1>
@@ -42,12 +50,20 @@ Welcome to your new app.
  *@
 @code {
     private IList<Novel> Novels { get; set; } = new List<Novel>();
-    MudTheme _themeDefinition = new MainTheme();
+    private MudTheme _themeDefinition = new MainTheme();
+    private bool _suppressRender;
 
-    protected  override async Task OnInitializedAsync()
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
     {
+        if (Novels.Count > 0)
+            return;
+
         // Simulate asynchronous loading to demonstrate a loading indicator
         await Task.Delay(500);
+
         Novels.Clear();
 
         Novels.Add(new Novel()
@@ -55,15 +71,15 @@ Welcome to your new app.
                 Title = "The Enchanted Forest",
                 ShortDescription = "A captivating tale of mystery and magic in the depths of an ancient forest...",
                 User = new AppUser() { UserNick = "Emily Brontë" },
-                NovelDetail = new NovelDetail() { Title = "The Enchanted Forest", Text = "Sample Text" }
+                NovelStory = new NovelStory() { Title = "The Enchanted Forest", Text = "Sample Text" }
             });
 
-         Novels.Add(new Novel()
+        Novels.Add(new Novel()
             {
                 Title = "Journey to the Unknown",
                 ShortDescription = "Embark on an adventure filled with unexpected twists and thrilling encounters...",
                 User = new AppUser() { UserNick = "Mark Twain" },
-                NovelDetail = new NovelDetail() { Title = "Journey to the Unknown", Text = "Sample Text" }
+                NovelStory = new NovelStory() { Title = "Journey to the Unknown", Text = "Sample Text" }
             });
 
         Novels.Add(new Novel()
@@ -71,7 +87,7 @@ Welcome to your new app.
                 Title = "Whispers of the Past",
                 ShortDescription = "Discover the secrets of a bygone era through the eyes of those who lived it...",
                 User = new AppUser() { UserNick = "Jane Austen" },
-                NovelDetail = new NovelDetail() { Title = "Whispers of the Past", Text = "Sample Text" }
+                NovelStory = new NovelStory() { Title = "Whispers of the Past", Text = "Sample Text" }
             });
 
         Novels.Add(new Novel()
@@ -79,7 +95,18 @@ Welcome to your new app.
                 Title = "The Mysterious Forest Adventure",
                 ShortDescription = "Once upon a time in a remote forest, a young explorer named Alex stumbled upon...",
                 User = new AppUser() { UserNick = "Emily Carter" },
-                NovelDetail = new NovelDetail() { Title = "The Mysterious Forest Adventure", Text = "Sample Text" }
+                NovelStory = new NovelStory() { Title = "The Mysterious Forest Adventure", Text = "Sample Text" }
             });
+    }
+
+    protected override bool ShouldRender()
+      => !_suppressRender;
+
+    private void GoToNovelDetail(Novel novel)
+    {
+        _suppressRender = true;
+        var hashCode = novel.GetHashCode();
+        StateContainer.ObjectTunnel.Add(hashCode, novel);
+        NavigationManager.NavigateTo($"/novel-detail/{hashCode}");
     }
 }
