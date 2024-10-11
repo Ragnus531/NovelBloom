@@ -1,0 +1,72 @@
+﻿@page "/novel-detail/{SetHashCode:int}"
+
+@using NovelBloom.Models
+@using NovelBloom.Styles
+@using NovelBloom.Utils
+
+<style>
+    .myImage {
+        max-width: 100vw;
+        height: auto;
+        max-height: 100vh;
+        width: auto;
+    }
+</style>
+
+@if (Novel != null)
+{
+    <MudText Typo="Typo.h4">@Novel.NovelStory.Title</MudText>
+    <MudText Typo="Typo.subtitle2" Class="mt-1">by @Novel.User.UserNick</MudText>
+    <MudImage Src="images/defaultimage.jpeg" Height="150" Class="rounded-lg myImage" />
+
+    <MudText Typo="Typo.body1"><b>@Novel.ShortDescription</b></MudText>
+
+    <MudStack AlignItems="AlignItems.Center" JustifyContent="Center">
+        <MudButtonGroup Color="Color.Secondary" Size="Size.Medium" Variant="Variant.Filled">
+            <MudButton StartIcon="@Icons.Material.Filled.Cyclone">Like</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Bookmark">Bookmark</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Share">Share</MudButton>
+        </MudButtonGroup>
+    </MudStack>
+    
+
+    <MudDivider Class="mt-2 mb-2" />
+
+    <MudText Typo="Typo.body2"><b>Lucas Johnson</b></MudText>
+    <MudText Typo="Typo.subtitle2">April 12,2023</MudText>
+    <MudText Typo="Typo.body2"><b>Absolutely loved the twist at the end! Can't wait to read more from this author.</b></MudText>
+
+    <MudText Class="mt-3" Typo="Typo.body2"><b>Sophia Williams</b></MudText>
+    <MudText Typo="Typo.subtitle2">April 11,2023</MudText>
+    <MudText Typo="Typo.body2"><b>The imagery in this story is breathtaking. Felt like i was right there in the forest.</b></MudText>
+
+    <MudDivider Class="mt-2 mb-2" />
+
+    <MudGrid>
+        <MudItem xs="9">
+            <MudTextField @bind-Value="TextValue" Label="Leave a comment..." Variant="Variant.Outlined"></MudTextField>
+        </MudItem>
+        <MudItem xs="3" Class="mt-1">
+            <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" />
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+
+    private Novel Novel { get; set; }
+
+    public string TextValue { get; set; }
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Parameter] public int SetHashCode { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var data = (Novel)StateContainer.ObjectTunnel[SetHashCode];
+        Novel = data;
+    }
+}

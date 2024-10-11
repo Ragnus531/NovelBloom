@@ -4,7 +4,7 @@ namespace NovelBloom.Client;
 
 internal class NovelHttpClient
 {
-    public IList<NovelDetail> GetAllNovelDetails()
+    public IList<NovelStory> GetAllNovelDetails()
     {
         throw new NotImplementedException();
     }
