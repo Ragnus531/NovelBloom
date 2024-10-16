@@ -57,10 +57,13 @@ else
 
         Novels.Add(new Novel()
             {
-                Title =  "The Enchanted Forest",
+                Title = "The Enchanted Forest",
                 ShortDescription = "A captivating tale of mystery and magic in the depths of an ancient forest...",
                 User = new AppUser() { UserNick = "Emily Brontë" },
-                NovelStory = new NovelSection() { SectionName =  "The Enchanted Forest", SectionText =  "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Enchanted Forest", SectionText = "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
@@ -68,7 +71,10 @@ else
                 Title =  "Journey to the Unknown",
                 ShortDescription = "Embark on an adventure filled with unexpected twists and thrilling encounters...",
                 User = new AppUser() { UserNick = "Mark Twain" },
-                NovelStory = new NovelSection() { SectionName =  "Journey to the Unknown", SectionText =  "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName =  "Journey to the Unknown", SectionText =  "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
@@ -76,7 +82,10 @@ else
                 Title = "Whispers of the Past",
                 ShortDescription = "Discover the secrets of a bygone era through the eyes of those who lived it...",
                 User = new AppUser() { UserNick = "Jane Austen" },
-                NovelStory = new NovelSection() { SectionName =  "Whispers of the Past", SectionText =  "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "Whispers of the Past", SectionText = "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
@@ -84,7 +93,10 @@ else
                 Title = "The Mysterious Forest Adventure",
                 ShortDescription = "Once upon a time in a remote forest, a young explorer named Alex stumbled upon...",
                 User = new AppUser() { UserNick = "Emily Carter" },
-                NovelStory = new NovelSection() { SectionName =  "The Mysterious Forest Adventure", SectionText =  "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Mysterious Forest Adventure", SectionText = "Sample Text" }
+                }
             });
     }
 

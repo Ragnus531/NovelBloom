@@ -13,5 +13,5 @@ internal class Novel
     public AppUser User { get; set; }
     public string ShortDescription { get; set; }
 
-    public NovelSection NovelStory { get; set; }
+    public List<NovelSection> NovelSection { get; set; } = new List<NovelSection>();
 }

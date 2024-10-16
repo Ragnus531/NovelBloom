@@ -1,4 +1,5 @@
 ﻿@page "/novel/create"
+@using NovelBloom.Models
 @using NovelBloom.Styles
 
 <h3>CreateStoryPage</h3>
@@ -9,17 +10,30 @@
     }
 </style>
 
+@foreach(var section in Novel.NovelSection)
+{
+    <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary};")" Class="pa-2 ma-3 rounded-lg">
+        <MudCardContent>
+            <MudText Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2">
+                
+                </MudText>
+            <MudTextField Style="@($"background:#313639; color:#788394")" @bind-Value="section.SectionText" Label="Write your prologue here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
+        </MudCardContent>
+    </MudCard>
+}
 
-@* Bind to Novel class and creating add new section will create new novel sections*@
-<MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary};")" Class="pa-2 ma-3 rounded-lg">
-    <MudCardContent >
-        <MudText Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2">Prologue</MudText>
-        <MudTextField Style="@($"background:#313639; color:#788394")" @bind-Value="TextValue" Label="Write your prologue here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
-    </MudCardContent>
-</MudCard>
+
+<MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddSection()" />
+
 
 @code {
     public string TextValue { get; set; }
     private MudTheme _themeDefinition = new MainTheme();
+    private Novel Novel { get; set; } = new Novel();
 
+
+    public void AddSection()
+    {
+        Novel.NovelSection.Add(new NovelSection());
+    }
 }
