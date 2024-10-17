@@ -14,10 +14,8 @@
 {
     <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary};")" Class="pa-2 ma-3 rounded-lg">
         <MudCardContent>
-            <MudText Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2">
-                
-                </MudText>
-            <MudTextField Style="@($"background:#313639; color:#788394")" @bind-Value="section.SectionText" Label="Write your prologue here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
+            <MudTextField @bind-Value="section.SectionName" Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2" Label="Write your section here..."></MudTextField>
+            <MudTextField Style="@($"background:#313639; color:#788394")" @bind-Value="section.SectionText" Label="Add content for this part here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
         </MudCardContent>
     </MudCard>
 }
