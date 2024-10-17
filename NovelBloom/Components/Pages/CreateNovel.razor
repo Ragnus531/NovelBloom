@@ -1,4 +1,5 @@
 ﻿@page "/novel/create"
+@using NovelBloom.Components.Dialogs
 @using NovelBloom.Models
 @using NovelBloom.Styles
 
@@ -12,10 +13,16 @@
 
 @foreach(var section in Novel.NovelSection)
 {
-    <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary};")" Class="pa-2 ma-3 rounded-lg">
+    <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; position: relative")" Class="pa-2 ma-3 rounded-lg">
         <MudCardContent>
             <MudTextField @bind-Value="section.SectionName" Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2" Label="Write your section here..."></MudTextField>
             <MudTextField Style="@($"background:#313639; color:#788394")" @bind-Value="section.SectionText" Label="Add content for this part here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
+
+            <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Close"
+                    Size="Size.Small"
+                    Style="position: absolute; top: 5px; right: 5px;"
+                    OnClick="() => RemoveSection(section)" />
+
         </MudCardContent>
     </MudCard>
 }
@@ -25,13 +32,49 @@
 
 
 @code {
-    public string TextValue { get; set; }
+    // 1. Private Fields
     private MudTheme _themeDefinition = new MainTheme();
-    private Novel Novel { get; set; } = new Novel();
 
+    // 2. Properties
+    public string TextValue { get; set; }
+
+    private Novel Novel { get; set; } = new Novel();
+    // Injected Services
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+
+
+    protected override void OnInitialized()
+    {
+        Novel.NovelSection.Add(new NovelSection()
+        {
+                SectionName = "Prologue",
+                SectionText = "Text for prologue section..."
+        });
+    }
 
     public void AddSection()
     {
         Novel.NovelSection.Add(new NovelSection());
+    }
+
+    public async Task RemoveSection(NovelSection novelSection)
+    {
+        var sectionName = string.IsNullOrEmpty(novelSection.SectionName) ? "this section" :  novelSection.SectionName;
+
+        var parameters = new DialogParameters<SimpleDialog>
+        {
+            { x => x.ContentText, $"Are you sure you want to remove {sectionName}?" },
+            { x => x.ButtonText, "Yes" },
+            { x => x.Color, Color.Error }
+        };
+
+        var dialog = await DialogService.ShowAsync<SimpleDialog>("Confirm", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Novel.NovelSection.Remove(novelSection);
+
+        }
     }
 }
