@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace NovelBloom.Models;
 
-internal class AppUser
+internal class NovelGenre
 {
     public int Id { get; set; }
-    public string UserNick { get; set; }
+    public string Genre { get; set; }
 }

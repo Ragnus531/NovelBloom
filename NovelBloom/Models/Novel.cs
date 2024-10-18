@@ -8,8 +8,10 @@ namespace NovelBloom.Models;
 
 internal class Novel
 {
+    public int Id { get; set; }
     public string Title { get; set; }
     public AppUser User { get; set; }
     public string ShortDescription { get; set; }
-    public NovelStory NovelStory { get; set; }
+
+    public List<NovelSection> NovelSection { get; set; } = new List<NovelSection>();
 }

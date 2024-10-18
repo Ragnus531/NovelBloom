@@ -37,17 +37,6 @@ else
     }
 }
 
-@* <h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<MudButton Variant="Variant.Filled" Color="Color.Primary">Prim</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Dark">Primary</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Secondary">Secondary</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Tertiary">Primary</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Success">Primary</MudButton>
-<MudButton Variant="Variant.Filled" Color="Color.Info">Primary</MudButton>
- *@
 @code {
     private IList<Novel> Novels { get; set; } = new List<Novel>();
     private MudTheme _themeDefinition = new MainTheme();
@@ -71,15 +60,21 @@ Welcome to your new app.
                 Title = "The Enchanted Forest",
                 ShortDescription = "A captivating tale of mystery and magic in the depths of an ancient forest...",
                 User = new AppUser() { UserNick = "Emily Brontë" },
-                NovelStory = new NovelStory() { Title = "The Enchanted Forest", Text = "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Enchanted Forest", SectionText = "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
             {
-                Title = "Journey to the Unknown",
+                Title =  "Journey to the Unknown",
                 ShortDescription = "Embark on an adventure filled with unexpected twists and thrilling encounters...",
                 User = new AppUser() { UserNick = "Mark Twain" },
-                NovelStory = new NovelStory() { Title = "Journey to the Unknown", Text = "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName =  "Journey to the Unknown", SectionText =  "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
@@ -87,7 +82,10 @@ Welcome to your new app.
                 Title = "Whispers of the Past",
                 ShortDescription = "Discover the secrets of a bygone era through the eyes of those who lived it...",
                 User = new AppUser() { UserNick = "Jane Austen" },
-                NovelStory = new NovelStory() { Title = "Whispers of the Past", Text = "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "Whispers of the Past", SectionText = "Sample Text" }
+                }
             });
 
         Novels.Add(new Novel()
@@ -95,7 +93,10 @@ Welcome to your new app.
                 Title = "The Mysterious Forest Adventure",
                 ShortDescription = "Once upon a time in a remote forest, a young explorer named Alex stumbled upon...",
                 User = new AppUser() { UserNick = "Emily Carter" },
-                NovelStory = new NovelStory() { Title = "The Mysterious Forest Adventure", Text = "Sample Text" }
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Mysterious Forest Adventure", SectionText = "Sample Text" }
+                }
             });
     }
 

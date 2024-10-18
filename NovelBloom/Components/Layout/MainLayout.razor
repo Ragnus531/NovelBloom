@@ -12,7 +12,7 @@
 @* Needed for snackbars *@
 <MudSnackbarProvider />
 
-<MudLayout>
+<MudLayout Style="height: 100vh;">
     <MudAppBar Color="Color.Primary">
         <MudIconButton Icon="@Icons.Material.Filled.MenuBook" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         My Application
@@ -20,7 +20,7 @@
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent Style="@($"color:{Colors.Gray.Lighten5}; background:{_themeDefinition.PaletteLight.Black};")">
+    <MudMainContent Style="@($"color:{Colors.Gray.Lighten5}; background:{_themeDefinition.PaletteLight.Black}; min-height: 100vh; display: flex; flex-direction: column;")">
         @Body
     </MudMainContent>
 </MudLayout>
