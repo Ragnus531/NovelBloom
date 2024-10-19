@@ -1,6 +1,9 @@
-﻿namespace NovelBloom.Utils;
+﻿using NovelBloom.CustomTypes;
+
+namespace NovelBloom.Utils;
 
 internal class StateContainer
 {
-    public readonly Dictionary<int, object> ObjectTunnel = new();
+    public readonly AutoRemoveDictionary<int, object> ObjectTunnel =
+        new AutoRemoveDictionary<int, object>();
 }

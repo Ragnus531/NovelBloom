@@ -11,6 +11,26 @@
         max-height: 100vh;
         width: auto;
     }
+
+    .read-now-button {
+        background-color: #e67e22; /* Darker orange */
+        color: white; /* Text color */
+        border: none; /* Remove border */
+        padding: 10px 20px; /* Padding for comfortable text space */
+        font-size: 16px; /* Readable font size */
+        border-radius: 5px; /* Slight rounding for a modern look */
+        cursor: pointer; /* Pointer to indicate it’s clickable */
+        width: 140px; /* Fixed width */
+        text-align: center; /* Ensure text is centered */
+        display: block; /* Block element to ensure it’s easy to position */
+        margin: 20px auto; /* Center it horizontally with margin */
+        transition: background-color 0.3s ease; /* Smooth hover effect */
+    }
+
+        .read-now-button:hover {
+            background-color: #d35400; /* Darker shade on hover */
+        }
+
 </style>
 
 @if (Novel != null)
@@ -28,7 +48,9 @@
             <MudButton StartIcon="@Icons.Material.Filled.Share">Share</MudButton>
         </MudButtonGroup>
     </MudStack>
-    
+
+    <MudButton class="read-now-button"  Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.AutoStories" @onclick="() => GoToNovelDetail()">Read Now</MudButton>
+
 
     <MudDivider Class="mt-2 mb-2" />
 
@@ -59,14 +81,29 @@ else
 @code {
 
     private Novel Novel { get; set; }
+    private bool _suppressRender;
 
     public string TextValue { get; set; }
+
     [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
     [Parameter] public int SetHashCode { get; set; }
+
+    protected override bool ShouldRender()
+    => !_suppressRender;
 
     protected override void OnInitialized()
     {
         var data = (Novel)StateContainer.ObjectTunnel[SetHashCode];
         Novel = data;
+    }
+
+    private void GoToNovelDetail()
+    {
+        _suppressRender = true;
+        var hashCode = Novel.GetHashCode();
+        StateContainer.ObjectTunnel.Add(hashCode, Novel);
+        NavigationManager.NavigateTo($"/novel-detail-story/{hashCode}");
     }
 }

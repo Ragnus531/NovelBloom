@@ -1,0 +1,25 @@
+﻿@page "/novel-detail-story/{SetHashCode:int}"
+
+@using NovelBloom.Utils
+@using NovelBloom.Models
+
+<h3>NovelDetailStory</h3>
+
+@if(Novel != null){
+    <MudText Typo="Typo.h4">@Novel.Title</MudText>
+}
+
+@code {
+    private Novel Novel { get; set; }
+
+
+    [Parameter] public int SetHashCode { get; set; }
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var data = (Novel)StateContainer.ObjectTunnel[SetHashCode];
+        Novel = data;
+    }
+
+}
