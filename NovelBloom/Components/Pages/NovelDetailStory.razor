@@ -1,0 +1,39 @@
+﻿@page "/novel-detail-story/{SetHashCode:int}"
+
+@using NovelBloom.Components.Dialogs
+@using NovelBloom.Models
+@using NovelBloom.Styles
+@using NovelBloom.Utils
+
+@if (Novel != null)
+{
+    @foreach (var section in Novel.NovelSection)
+    {
+        <MudCard Style="@($"background:{_themeDefinition.PaletteLight.White}; position: relative")" Class="pa-2 ma-3 rounded-lg">
+            <MudCardContent>
+                <MudText Style="@($"color:#000000")" Typo="Typo.h6">@(section.SectionName)</MudText>
+                <MudText Style="@($"color:#000000")" Typo="Typo.subtitle1">
+                    @(section.SectionText)
+                </MudText>
+
+            </MudCardContent>
+        </MudCard>
+    }
+}
+
+@code {
+    private MudTheme _themeDefinition = new MainTheme();
+
+    private Novel Novel { get; set; }
+
+
+    [Parameter] public int SetHashCode { get; set; }
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        var data = (Novel)StateContainer.ObjectTunnel[SetHashCode];
+        Novel = data;
+    }
+}

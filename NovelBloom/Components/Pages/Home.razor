@@ -45,6 +45,9 @@ else
     [Inject] private StateContainer StateContainer { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
+    protected override bool ShouldRender()
+      => !_suppressRender;
+
     protected override async Task OnInitializedAsync()
     {
         if (Novels.Count > 0)
@@ -100,8 +103,7 @@ else
             });
     }
 
-    protected override bool ShouldRender()
-      => !_suppressRender;
+
 
     private void GoToNovelDetail(Novel novel)
     {

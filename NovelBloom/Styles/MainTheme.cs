@@ -11,7 +11,7 @@ public class MainTheme : MudTheme
             White = "#FFFFFF",
             Primary = "#a9a9a9",
             Secondary = "#e97b06",
-            Tertiary = "#FFFFFF"
+            Tertiary = "#FFFFFF",
         };
     }
 }
