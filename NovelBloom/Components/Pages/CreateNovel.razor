@@ -1,7 +1,9 @@
-﻿@page "/novel/create"
+﻿@page "/novel/add-or-update/{SetHashCode:int?}"
+
 @using NovelBloom.Components.Dialogs
 @using NovelBloom.Models
 @using NovelBloom.Styles
+@using NovelBloom.Utils
 
 <style>
     .mud-input-label {
@@ -9,28 +11,46 @@
     }
 </style>        
 
-@foreach(var section in Novel.NovelSection)
+@if(Novel != null)
 {
-    <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; position: relative")" Class="pa-2 ma-3 rounded-lg">
-        <MudCardContent>
-            <MudTextField @bind-Value="section.SectionName" Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2" Label="Write your section here..."></MudTextField>
-            <MudTextField Style="@($"background:#313639; color:#A3AAB4")" @bind-Value="section.SectionText" Label="Add content for this part here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
+    @if(IsEditing)
+    {
+        <MudText Typo="Typo.h4" >Editing novel</MudText>
+    }
+    else
+    {
+        <MudText Typo="Typo.h4">Creating novel</MudText>
+    }
 
-            <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Close"
-                    Size="Size.Small"
-                    Style="position: absolute; top: 5px; right: 5px;"
-                    OnClick="() => RemoveSection(section)" />
+    @foreach (var section in Novel.NovelSection)
+    {
+        <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; position: relative")" Class="pa-2 ma-3 rounded-lg">
+            <MudCardContent>
+                <MudTextField @bind-Value="section.SectionName" Color="Color.Tertiary" Typo="Typo.h6" Class="mb-2" Label="Write your section here..."></MudTextField>
+                <MudTextField Style="@($"background:#313639; color:#A3AAB4")" @bind-Value="section.SectionText" Label="Add content for this part here..." Variant="Variant.Filled" FullWidth="true" Lines="4" />
 
-        </MudCardContent>
-    </MudCard>
+                <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Close"
+                        Size="Size.Small"
+                        Style="position: absolute; top: 5px; right: 5px;"
+                        OnClick="() => RemoveSection(section)" />
+
+            </MudCardContent>
+        </MudCard>
+    }
+
+
+    @* <MudFab Style="position: fixed; bottom: 16px; right: 16px;" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddSection()" /> *@
+    <div Style="display: flex; justify-content: flex-end;">
+        <MudFab Class="mr-2" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddSection()" />
+        <MudFab Class="mr-2" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" OnClick="() => AddSection()" />
+    </div>
+}
+else
+{
+    <p>Loading...</p>
 }
 
 
-@* <MudFab Style="position: fixed; bottom: 16px; right: 16px;" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddSection()" /> *@
-<div Style="display: flex; justify-content: flex-end;">
-    <MudFab Class="mr-2" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Add" OnClick="() => AddSection()" />
-    <MudFab Class="mr-2" Color="Color.Success" StartIcon="@Icons.Material.Filled.Save" OnClick="() => AddSection()" />
-</div>
 
 
 @code {
@@ -39,19 +59,32 @@
 
     // 2. Properties
     public string TextValue { get; set; }
-
+    protected bool IsEditing { get; set; }
     private Novel Novel { get; set; } = new Novel();
-    // Injected Services
-    [Inject] private IDialogService DialogService { get; set; } = default!;
 
+    // Injected Services
+
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Parameter] public int? SetHashCode { get; set; }
 
     protected override void OnInitialized()
     {
-        Novel.NovelSection.Add(new NovelSection()
+        if(SetHashCode.HasValue)
         {
-                SectionName = "Prologue",
-                SectionText = "Once upon a ime..."
-        });
+            var data = (Novel)StateContainer.ObjectTunnel[SetHashCode.Value];
+            Novel = data;
+            IsEditing = true;
+        }
+        else
+        {
+            Novel.NovelSection.Add(new NovelSection()
+                {
+                    SectionName = "Prologue",
+                    SectionText = "Once upon a ime..."
+                });
+            IsEditing = false;
+        }
     }
 
     public void AddSection()
