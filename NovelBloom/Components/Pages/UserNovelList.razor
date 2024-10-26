@@ -1,0 +1,98 @@
+﻿@page "/user/novels"
+
+@using NovelBloom.Models
+@using NovelBloom.Styles
+@using NovelBloom.Utils
+
+@if (Novels == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var novel in Novels)
+    {
+        <MudCard Style="@($"background:{_themeDefinition.PaletteLight.Primary}; color:{Colors.Gray.Lighten5};")" Class="pa-2 ma-3 rounded-lg" @onclick="() => GoToNovelDetail(novel)">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5">@novel.Title</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>@novel.ShortDescription</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudStack Row="true" Style="width: 100%;" Justify="Justify.FlexEnd">
+                    <MudFab Color="Color.Secondary" Label="Edit" @onclick="() => GoToNovelDetail(novel)" />
+                </MudStack>
+            </MudCardActions>
+        </MudCard>
+    }
+}
+
+@code {
+    private MudTheme _themeDefinition = new MainTheme();
+    private bool _suppressRender;
+
+    private IList<Novel> Novels { get; set; } = new List<Novel>();
+
+    protected override bool ShouldRender() => !_suppressRender;
+
+    [Inject] private StateContainer StateContainer { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        Novels.Add(new Novel()
+            {
+                Title = "The Enchanted Forest",
+                ShortDescription = "A captivating tale of mystery and magic in the depths of an ancient forest...",
+                User = new AppUser() { UserNick = "Emily Brontë" },
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Enchanted Forest", SectionText = "Sample Text" }
+                }
+            });
+
+        Novels.Add(new Novel()
+            {
+                Title = "Journey to the Unknown",
+                ShortDescription = "Embark on an adventure filled with unexpected twists and thrilling encounters...",
+                User = new AppUser() { UserNick = "Mark Twain" },
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName =  "Journey to the Unknown", SectionText =  "Sample Text" }
+                }
+            });
+
+        Novels.Add(new Novel()
+            {
+                Title = "Whispers of the Past",
+                ShortDescription = "Discover the secrets of a bygone era through the eyes of those who lived it...",
+                User = new AppUser() { UserNick = "Jane Austen" },
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "Whispers of the Past", SectionText = "Sample Text" }
+                }
+            });
+
+        Novels.Add(new Novel()
+            {
+                Title = "The Mysterious Forest Adventure",
+                ShortDescription = "Once upon a time in a remote forest, a young explorer named Alex stumbled upon...",
+                User = new AppUser() { UserNick = "Emily Carter" },
+                NovelSection = new List<NovelSection>()
+                {
+                    new NovelSection() { SectionName = "The Mysterious Forest Adventure", SectionText = "Sample Text" }
+                }
+            });
+    }
+
+    private void GoToNovelDetail(Novel novel)
+    {
+       _suppressRender = true;
+       var hashCode = novel.GetHashCode();
+       StateContainer.ObjectTunnel.Add(hashCode, novel);
+       NavigationManager.NavigateTo($"/novel/add-or-update/{hashCode}");
+    }
+}
